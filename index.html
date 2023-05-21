@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwallet</title>
+
+    <!--IONIC-->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+
+    <!--MAPAS LEAFLET-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+</head>
+<body>
+
+    <ion-app>
+        <!-- COMPONENTE DE RUTEO -->
+
+        <ion-router id="ruteo">
+            <ion-route url="/" component="page-home"></ion-route>
+            <ion-route url="/registro" component="page-registro"></ion-route>
+            <ion-route url="/login" component="page-login"></ion-route>
+            <ion-route url="/agregarGasto" component="page-agregarGasto"></ion-route>
+            <ion-route url="/agregarIngreso" component="page-agregarIngreso"></ion-route>
+            <ion-route url="/movimientos" component="page-movimientos"></ion-route>
+            <ion-route url="/montosTotales" component="page-montosTotales"></ion-route>
+            <ion-route url="/cajerosCercanos" component="page-cajerosCercanos"></ion-route>
+        </ion-router>
+        <ion-nav></ion-nav>
+
+        <!-- MENÚ DE OPCIONES -->
+
+        <ion-menu side="start" menu-id="first" content-id="main" id="menu">
+            <ion-header>
+                <ion-toolbar color="dark">
+                    <ion-title>Menu principal</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content id="menuOpciones">
+            </ion-content>
+        </ion-menu>
+
+        <div id="main"></div>
+
+        <!-------------------------------- PANTALLAS -------------------------------->
+
+        <!-- PANTALLA - HOME -->
+
+        <page-home class="ion-page" id="pantalla-home">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content id="contentHome"></ion-content>
+        </page-home>
+
+        <!-- PANTALLA - REGISTRO EN LA APLICACIÓN -->
+
+        <page-registro class="ion-page" id="pantalla-registro">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title>Registro en la aplicacion</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-list>
+                            <ion-item>
+                                <ion-label position="floating">Usuario</ion-label>
+                                <ion-input placeholder="Usuario" id="txtRegistroUsuario"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Password</ion-label>
+                                <ion-input placeholder="Password" id="txtRegistroPass"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Departamento</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione departamento" id="slcRegistroDepartamentos"></ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Ciudad</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione ciudad" id="slcRegistroCiudades"></ion-select>
+                            </ion-item>
+        
+                            <ion-button expand="full" id="btnRegistrar" color="dark">Guardar</ion-button>
+                        </ion-list>
+        
+                        <ion-text color="primary" id="msgRegistro"></ion-text>
+                    </ion-card-content>
+                </ion-card>
+                
+            </ion-content>
+        </page-registro>
+
+        <!-- PANTALLA - LOGIN EN LA APLICACIÓN -->
+
+        <page-login class="ion-page" id="pantalla-login">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title>Login en la aplicacion</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-list>
+                            <ion-item>
+                                <ion-label position="floating">Usuario</ion-label>
+                                <ion-input placeholder="Usuario" id="txtLoginUsuario"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Password</ion-label>
+                                <ion-input placeholder="Password" id="txtLoginPass" type="password"></ion-input>
+                            </ion-item> 
+        
+                            <ion-button expand="full" id="btnIngresar" color="dark">Ingresar</ion-button>
+                        </ion-list>
+        
+                        <ion-text color="primary" id="msgLogin"></ion-text>
+                    </ion-card-content>
+                </ion-card>
+            </ion-content>
+        </page-login>
+
+        <!-- PANTALLA - AGREGAR UN GASTO -->
+
+        <page-agregarGasto class="ion-page" id="pantalla-agregarGasto">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title>Agregar gasto</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-list>
+                            <ion-item>
+                                <ion-label position="floating">Concepto</ion-label>
+                                <ion-input placeholder="Concepto" id="txtConceptoGasto"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Rubro</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione rubro" id="slcRubroGasto"></ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Medio de pago</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione medio de pago" id="slcMedioGasto">
+                                    <ion-select-option value="efectivo">Efectivo</ion-select-option>
+                                    <ion-select-option value="debito">Débito</ion-select-option>
+                                    <ion-select-option value="credito">Crédito</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Importe total</ion-label>
+                                <ion-input placeholder="Importe total" id="txtTotalGasto"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-datetime presentation="date" id="dateGasto">
+                                    <span slot="title">Seleccione la fecha</span>
+                                </ion-datetime>
+                            </ion-item>
+                        </ion-list>
+                        <ion-button expand="full" id="btnAgregarGasto" color="dark">Agregar</ion-button>
+                    </ion-card-content>
+                </ion-card>
+            </ion-content>
+        </page-agregarGasto>
+
+        <!-- PANTALLA - AGREGAR UN INGRESO -->
+
+        <page-agregarIngreso class="ion-page" id="pantalla-agregarIngreso">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card>
+                    <ion-card-header>
+                        <ion-card-title>Agregar ingreso</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-list>
+                            <ion-item>
+                                <ion-label position="floating">Concepto</ion-label>
+                                <ion-input placeholder="Concepto" id="txtConceptoIngreso"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Rubro</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione rubro" id="slcRubroIngreso"></ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Medio de pago</ion-label>
+                                <ion-select interface="action-sheet" placeholder="Seleccione medio de pago" id="slcMedioIngreso">
+                                    <ion-select-option value="efectivo">Efectivo</ion-select-option>
+                                    <ion-select-option value="banco">Banco</ion-select-option>
+                                </ion-select>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="floating">Importe total</ion-label>
+                                <ion-input placeholder="Importe total" id="txtTotalIngreso"></ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-datetime presentation="date" id="dateIngreso">
+                                    <span slot="title">Seleccione la fecha</span>
+                                </ion-datetime>
+                            </ion-item>
+                        </ion-list>
+                        <ion-button expand="full" id="btnAgregarIngreso" color="dark">Agregar</ion-button>
+                    </ion-card-content>
+                </ion-card>
+            </ion-content>
+        </page-agregarIngreso>
+
+        <!-- PANTALLA - LISTADO DE MOVIMIENTOS -->
+
+        <page-movimientos class="ion-page" id="pantalla-movimientos">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card color="light">
+                    <ion-card-content>
+                        <ion-select interface="action-sheet" placeholder="Seleccione tipo de movimiento" id="slcTipoMovimiento">
+                            <ion-select-option value="gasto">Gasto</ion-select-option>
+                            <ion-select-option value="ingreso">Ingreso</ion-select-option>
+                        </ion-select>
+                        <ion-button expand="full" id="btnFiltrarMovimientos" color="dark">Filtrar</ion-button>
+                    </ion-card-content>
+                </ion-card>
+                
+                <ion-card color="light">
+                    <ion-card-header>
+                      <ion-card-title>Movimientos</ion-card-title>
+                    </ion-card-header>
+                  
+                    <ion-card-content>
+                      <ion-list id="contentMovimientos">
+                      </ion-list>
+                    </ion-card-content>
+                </ion-card>
+            </ion-content>
+        </page-movimientos>
+
+        <!-- PANTALLA - MONTOS TOTALES -->
+
+        <page-montosTotales class="ion-page" id="pantalla-montosTotales">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-card color="light" style="display: inline-block; width: 40%;">
+                    <ion-card-header>
+                      <ion-card-subtitle style="text-align: center;">Total de gastos</ion-card-subtitle>
+                    </ion-card-header>
+                  
+                    <ion-card-content id="totalGastos">
+                    </ion-card-content>
+                </ion-card>
+
+                <ion-card color="light" style="display: inline-block; width: 40%;">
+                    <ion-card-header>
+                      <ion-card-subtitle style="text-align: center;">Total de ingresos</ion-card-subtitle>
+                    </ion-card-header>
+                  
+                    <ion-card-content id="totalIngresos">
+                    </ion-card-content>
+                </ion-card>
+
+                <ion-card color="light">
+                    <ion-card-header>
+                      <ion-card-title style="text-align: center;">Saldo restante</ion-card-title>
+                    </ion-card-header>
+                  
+                    <ion-card-content id="saldoRestante">
+                    </ion-card-content>
+                </ion-card>
+            </ion-content>
+        </page-montosTotales>
+
+        <!-- PANTALLA - CAJEROS CERCANOS -->
+
+        <page-cajerosCercanos class="ion-page" id="pantalla-cajerosCercanos">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <div id="map" style="height: 600px;"></div>
+            </ion-content>
+        </page-cajerosCercanos>
+        
+    </ion-app>
+
+    <script src="js/estructura.js"></script>
+    <script src="js/codigo.js"></script>
+</body>
+</html>
